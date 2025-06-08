@@ -24,7 +24,7 @@ public class EducationalUnit {
     @JoinColumn(name = "region_id")
     private Region region;
 
-    @Getter(AccessLevel.PRIVATE)
+
     @ManyToMany(mappedBy = "eduUnits")
     private Set<Employee> employees = new HashSet<>();
 }

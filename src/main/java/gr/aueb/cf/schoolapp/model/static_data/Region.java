@@ -24,8 +24,8 @@ public class Region {
     @OneToMany(mappedBy = "region")
     private Set<EducationalUnit> eduUnits = new HashSet<>();
 
-    public Set<EducationalUnit> getAllEducationalUnits() {
-        if (eduUnits == null) eduUnits = new HashSet<>();
-        return Collections.unmodifiableSet(eduUnits);
-    }
+//    public Set<EducationalUnit> getAllEducationalUnits() {
+//        if (eduUnits == null) eduUnits = new HashSet<>();
+//        return Collections.unmodifiableSet(eduUnits);
+//    }
 }

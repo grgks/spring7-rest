@@ -18,26 +18,18 @@ public class PersonalInfo extends AbstractEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String amka;
+
+    @Column(name = "identity_number")
+    private String identityNumber;
+
+    @Column(name = "place_of_birth")
+    private String placeOfBirth;
+
+    @Column(name = "municipality_of_registration")
+    private String municipalityOfRegistration;
+
     @OneToOne
     @JoinColumn(name = "amka_file_id")
     private Attachment amkaFile;
-
-    @Column(unique = true)
-    private String amka;
-
-    @Column(unique = true)
-    private String identityNumber;
-    private String placeOfBirth;
-    private String municipalityOfRegistration;
-
-    public PersonalInfo(LocalDateTime createdAt, LocalDateTime updated, Long id,
-                        String amka, String identityNumber, String placeOfBirth,
-                        String municipalityOfRegistration) {
-
-        this.id = id;
-        this.amka = amka;
-        this.identityNumber = identityNumber;
-        this.placeOfBirth = placeOfBirth;
-        this.municipalityOfRegistration = municipalityOfRegistration;
-    }
 }
