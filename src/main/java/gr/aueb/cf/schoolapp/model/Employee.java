@@ -17,7 +17,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Table(name = "employees")
-public class Employee {
+public class Employee extends AbstractEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,9 +29,7 @@ public class Employee {
     @Column(name = "is_active")
     private Boolean isActive;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User user;
+
 
     @ManyToMany
     @JoinTable(
@@ -39,9 +37,16 @@ public class Employee {
     )
     private Set<EducationalUnit> eduUnits = new HashSet<>();
 
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
+
     public void addEducationalUnit(EducationalUnit educationalUnit) {
         if (eduUnits == null) eduUnits = new HashSet<>();
         eduUnits.add(educationalUnit);
+        educationalUnit.getEmployees().add(this);
+
     }
 
     public boolean hasEducationalUnits() {

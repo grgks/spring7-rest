@@ -24,7 +24,7 @@ public class Teacher extends AbstractEntity {
     @Column(name = "is_active")
     private Boolean isActive;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL)     //οτιδήποτε αποθηκεύουμαι στον Teacher αντανακλά στον user
     @JoinColumn(name = "user_id")
     private User user;
 
@@ -32,7 +32,9 @@ public class Teacher extends AbstractEntity {
     @JoinColumn(name = "personal_info_id")
     private PersonalInfo personalInfo;
 
-    @PrePersist
+
+
+    //@PrePersist
     public void initializeUUID() {
         if (uuid == null) uuid = UUID.randomUUID().toString();
     }
