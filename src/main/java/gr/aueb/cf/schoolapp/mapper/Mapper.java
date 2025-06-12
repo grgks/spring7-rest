@@ -25,7 +25,7 @@ public class Mapper {
         UserReadOnlyDTO userDTO = new UserReadOnlyDTO();
         userDTO.setFirstname(teacher.getUser().getFirstname());
         userDTO.setLastname(teacher.getUser().getLastname());
-        userDTO.setVat(teacher.getUser().getVat());
+        userDTO.setVat(teacher.getUser().getAfm());
         teacherReadOnlyDTO.setUser(userDTO);
 
         // Map PersonalInfo to PersonalInfoReadOnlyDTO
@@ -49,7 +49,7 @@ public class Mapper {
         user.setLastname(userDTO.getLastname());
         user.setUsername(userDTO.getUsername());
         user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-        user.setVat(userDTO.getVat());
+        user.setAfm(userDTO.getVat());
         user.setFatherName(userDTO.getFatherName());
         user.setFatherLastname(userDTO.getFatherLastname());
         user.setMotherName(userDTO.getMotherName());
