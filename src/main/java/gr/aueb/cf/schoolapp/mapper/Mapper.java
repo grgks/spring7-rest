@@ -1,10 +1,14 @@
 package gr.aueb.cf.schoolapp.mapper;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import gr.aueb.cf.schoolapp.dto.*;
 import gr.aueb.cf.schoolapp.model.PersonalInfo;
 import gr.aueb.cf.schoolapp.model.Teacher;
 import gr.aueb.cf.schoolapp.model.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -25,7 +29,7 @@ public class Mapper {
         UserReadOnlyDTO userDTO = new UserReadOnlyDTO();
         userDTO.setFirstname(teacher.getUser().getFirstname());
         userDTO.setLastname(teacher.getUser().getLastname());
-        userDTO.setVat(teacher.getUser().getAfm());
+        userDTO.setVat(teacher.getUser().getVat());
         teacherReadOnlyDTO.setUser(userDTO);
 
         // Map PersonalInfo to PersonalInfoReadOnlyDTO
@@ -49,7 +53,7 @@ public class Mapper {
         user.setLastname(userDTO.getLastname());
         user.setUsername(userDTO.getUsername());
         user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-        user.setAfm(userDTO.getVat());
+        user.setVat(userDTO.getVat());
         user.setFatherName(userDTO.getFatherName());
         user.setFatherLastname(userDTO.getFatherLastname());
         user.setMotherName(userDTO.getMotherName());
@@ -72,4 +76,6 @@ public class Mapper {
 
         return teacher;
     }
+
+
 }
