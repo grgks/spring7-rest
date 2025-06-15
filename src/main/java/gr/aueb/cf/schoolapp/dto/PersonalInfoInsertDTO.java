@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.lang.Nullable;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,9 +20,11 @@ public class PersonalInfoInsertDTO {
     @NotEmpty(message = "Identity number is required")
     private String identityNumber;
 
+    @Nullable
     @NotEmpty(message = "Place of birth is required")
     private String placeOfBirth;
 
+    @Nullable
     @NotEmpty(message = "Municipality of registration is required")
     private String municipalityOfRegistration;
 }

@@ -1,5 +1,6 @@
 package gr.aueb.cf.schoolapp.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import gr.aueb.cf.schoolapp.core.enums.GenderType;
 import gr.aueb.cf.schoolapp.core.enums.Role;
 import jakarta.validation.constraints.*;
@@ -44,8 +45,11 @@ public class UserInsertDTO {
     @NotEmpty(message = "Mother's last name is required")
     private String motherLastname;
 
+
     @NotNull(message = "Date of birth is required")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate dateOfBirth;
+
 
     @NotNull(message = "Gender is required")
     private GenderType gender;
