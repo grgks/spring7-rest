@@ -20,6 +20,9 @@ public class Attachment extends AbstractEntity {
 
     private String filename;
 
+    @OneToOne(mappedBy = "amkaFile")
+    private PersonalInfo personalInfo;
+
     @Column(name = "saved_name")
     private String savedName;
 

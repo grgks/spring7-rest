@@ -36,6 +36,7 @@ public class Teacher extends AbstractEntity {
 
     @PrePersist
     public void initializeUUID() {
+
         if (uuid == null) uuid = UUID.randomUUID().toString();
     }
 }

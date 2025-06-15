@@ -11,6 +11,7 @@ import gr.aueb.cf.schoolapp.mapper.Mapper;
 import gr.aueb.cf.schoolapp.model.Attachment;
 import gr.aueb.cf.schoolapp.model.PersonalInfo;
 import gr.aueb.cf.schoolapp.model.Teacher;
+import gr.aueb.cf.schoolapp.repository.AttachmentRepository;
 import gr.aueb.cf.schoolapp.repository.PersonalInfoRepository;
 import gr.aueb.cf.schoolapp.repository.TeacherRepository;
 import gr.aueb.cf.schoolapp.repository.UserRepository;
@@ -49,33 +50,52 @@ public class TeacherService {
     private final Mapper mapper;
     private final UserRepository userRepository;
     private final PersonalInfoRepository personalInfoRepository;
+    private final AttachmentRepository attachmentRepository;
 
     @Transactional(rollbackOn = {AppObjectAlreadyExists.class, IOException.class})
     public TeacherReadOnlyDTO saveTeacher(TeacherInsertDTO teacherInsertDTO, MultipartFile amkaFile)
             throws AppObjectAlreadyExists, AppObjectInvalidArgumentException, IOException {
 
+        // 1. Έλεγχοι για ύπαρξη χρήστη
         if (userRepository.findByVat(teacherInsertDTO.getUser().getVat()).isPresent()) {
             throw new AppObjectAlreadyExists("User", "User with vat=" + teacherInsertDTO.getUser().getVat() + " already exists.");
         }
-
         if (userRepository.findByUsername(teacherInsertDTO.getUser().getUsername()).isPresent()) {
             throw new AppObjectAlreadyExists("User", "User with username=" + teacherInsertDTO.getUser().getUsername() + " already exists.");
         }
 
-        // Saving the teaches cascades user & personal info
+        // 2. Μετατροπή DTO σε entity
         Teacher teacher = mapper.mapToTeacherEntity(teacherInsertDTO);
 
-        saveAmkaFile(teacher.getPersonalInfo(), amkaFile);
-        Teacher savedTeacher = teacherRepository.save(teacher);
+        // 3. Αποθήκευση αρχείου και απόδοση Attachment (αν υπάρχει)
+        Attachment attachment = saveAmkaFile(amkaFile);
+        if (attachment != null) {
+            // 4. Αποθήκευση attachment ΜΟΝΟ του αρχείου ΠΡΩΤΑ
+            Attachment savedAttachment = attachmentRepository.save(attachment);
 
+            // 5. Set attachment στο PersonalInfo του teacher
+            PersonalInfo personalInfo = teacher.getPersonalInfo();
+            personalInfo.setAmkaFile(savedAttachment);
+
+            // 6. Αποθήκευση PersonalInfo (σβήνουμε αυτό το βήμα αν έχεις cascade ALL στο Teacher)
+            personalInfo = personalInfoRepository.save(personalInfo);
+
+            // 7. Ενημέρωση Teacher με updated PersonalInfo
+            teacher.setPersonalInfo(personalInfo);
+        }
+
+        // 8. Αποθήκευση Teacher (cascade αποθηκεύει και personalInfo)
+        Teacher savedTeacher = teacherRepository.saveAndFlush(teacher);
+
+        // 9. Επιστροφή του DTO
         return mapper.mapToTeacherReadOnlyDTO(savedTeacher);
     }
 
-    public void saveAmkaFile(PersonalInfo personalInfo, MultipartFile amkaFile)
-            throws IOException {
 
-        if (amkaFile == null || amkaFile.isEmpty()) return;
-try{
+
+    public Attachment saveAmkaFile(MultipartFile amkaFile) throws IOException {
+        if (amkaFile == null || amkaFile.isEmpty()) return null;
+
         String originalFilename = amkaFile.getOriginalFilename();
         String savedName = UUID.randomUUID().toString() + getFileExtension(originalFilename);
 
@@ -91,13 +111,10 @@ try{
         attachment.setContentType(amkaFile.getContentType());
         attachment.setExtension(getFileExtension(originalFilename));
 
-        personalInfo.setAmkaFile(attachment);
         LOGGER.info("File saved successfully");
-    } catch (IOException e) {
-        LOGGER.error("Failed to save file", e);
-        throw e;
+        return attachment;
     }
-    }
+
 
     private String getFileExtension(String filename) {
         if (filename == null || !filename.contains(".")) return "";

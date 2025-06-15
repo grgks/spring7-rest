@@ -95,25 +95,28 @@ public class TeacherRestController {
             throws AppObjectInvalidArgumentException, ValidationException, AppObjectAlreadyExists, AppServerException {
 
         LOGGER.info("Raw teacher JSON received: {}", teacherJson);
-        if (amkaFile != null) {
+
+        if (amkaFile != null && !amkaFile.isEmpty()) {
             LOGGER.info("File name: {}", amkaFile.getOriginalFilename());
         }
 
         try {
-            // Deserialize JSON string to DTO
-
+            // Μετατροπή του JSON string σε DTO
             TeacherInsertDTO teacherInsertDTO = objectMapper.readValue(teacherJson, TeacherInsertDTO.class);
 
-            // (Προαιρετικά) έλεγχος validation χειροκίνητα
+            // (Προαιρετικά) Εδώ μπορείς να κάνεις χειροκίνητο validation αν θες
             // validate(teacherInsertDTO);
 
+            // Αποθήκευση μέσω service
             TeacherReadOnlyDTO teacherReadOnlyDTO = teacherService.saveTeacher(teacherInsertDTO, amkaFile);
+
             return ResponseEntity.ok(teacherReadOnlyDTO);
         } catch (IOException e) {
             LOGGER.error("Failed to parse teacher JSON", e);
             throw new AppServerException("Teacher", "Invalid teacher data");
         }
     }
+
 
     @Operation(
             summary = "Get all teachers filtered",
