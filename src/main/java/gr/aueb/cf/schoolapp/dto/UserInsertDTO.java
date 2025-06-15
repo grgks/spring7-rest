@@ -45,9 +45,11 @@ public class UserInsertDTO {
     @NotEmpty(message = "Mother's last name is required")
     private String motherLastname;
 
-
+// Failed to parse teacher JSON
+//com.fasterxml.jackson.databind.exc.InvalidDefinitionException: Java 8 date/time type `java.time.LocalDate` not supported by default
+  //  για  αποφύγω το σκάσιμο στη μετατροπή του json και προσθήκη objectMapper στη save στον controller.
     @NotNull(message = "Date of birth is required")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")  // αυτό
     private LocalDate dateOfBirth;
 
 
