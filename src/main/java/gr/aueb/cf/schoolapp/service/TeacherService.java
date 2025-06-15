@@ -75,7 +75,7 @@ public class TeacherService {
             throws IOException {
 
         if (amkaFile == null || amkaFile.isEmpty()) return;
-
+try{
         String originalFilename = amkaFile.getOriginalFilename();
         String savedName = UUID.randomUUID().toString() + getFileExtension(originalFilename);
 
@@ -92,6 +92,11 @@ public class TeacherService {
         attachment.setExtension(getFileExtension(originalFilename));
 
         personalInfo.setAmkaFile(attachment);
+        LOGGER.info("File saved successfully");
+    } catch (IOException e) {
+        LOGGER.error("Failed to save file", e);
+        throw e;
+    }
     }
 
     private String getFileExtension(String filename) {
