@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class Mapper {
 
+
     private final PasswordEncoder passwordEncoder;
 
     public TeacherReadOnlyDTO mapToTeacherReadOnlyDTO(Teacher teacher) {
@@ -63,6 +64,7 @@ public class Mapper {
         user.setRole(userDTO.getRole());
         user.setIsActive(dto.getIsActive());
         teacher.setUser(user);  // Set User entity to Teacher
+
 
         // Map fields from PersonalInfoDTO
         PersonalInfoInsertDTO personalInfoDTO = dto.getPersonalInfo();
