@@ -50,5 +50,4 @@
 Start the app locally:        ./gradlew bootRun
 Visit the default endpoint:   GET http://localhost:8080/api/hello
 
-Developed  
-          by grgks
+
